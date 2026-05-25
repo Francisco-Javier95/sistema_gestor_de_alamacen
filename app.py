@@ -33,10 +33,17 @@ def login():
         if account:
             session['logueado'] = True
             session['id'] = account['usuario_id']
+            session['usuario_privilegio'] = account['usuario_privilegio']
 
-            return render_template('admin.html')
+            if session['usuario_privilegio'] == 1:
+                return render_template("admin.html")
+            else:
+                if session['usuario_privilegio'] == 2:
+                    return render_template("usuario.html")
+                
         else:
-            return render_template('index.html')
+            return render_template('index.html', mensaje="Usuario incorrecto")
+        
     else:
         return render_template('index.html')
 
