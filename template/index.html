@@ -6,11 +6,21 @@
     <title>Document</title>
 </head>
 <body>
+    <div>{% include('header.html') %}</div>
     <div>
         <form action="acceso-login" method="POST">
             <h1>Iniciar sesión</h1>
-            {% if mensaje %}
-            {{ mensaje }}
+
+            <!--Mensaje de error de usuario-->
+            {% if mensaje_error_credenciales %}
+            <div>
+                {{ mensaje_error_credenciales }}
+            </div>
+            {% endif %}
+
+            <!--Mensaje de usuario registrado exitosamente-->
+            {% if mensaje_registro_exitoso %}
+            {{ mensaje_registro_exitoso }}
             {% endif %}
             <div>
                 <label for="">Correo electronico</label>
@@ -21,10 +31,10 @@
                 <label for="">Contraseña</label>
                 <input type="password" name="usuacontra" placeholder="Contraseña">
             </div>
-            <div>
+            <!--<div>
                 <input type="checkbox" id="checkbox" placeholder="ejemplo@gmail.com">
                 <label for="">Marcame</label>
-            </div>
+            </div>-->
             <button type="submit">Iniciar sesión</button>
         </form>
     </div>
