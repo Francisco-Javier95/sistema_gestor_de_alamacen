@@ -17,9 +17,9 @@ mysql=MySQL(app)
 def home():
     return render_template('index.html')
 
-@app.route('/admin')
-def admin():
-    return render_template('admin.html')
+#@app.route('/admin')
+#def admin():
+#    return render_template('admin.html')
 
 # -----------------------Fución login-------------------------
 @app.route('/acceso-login', methods=["GET", "POST"]) # Extrae de la pagina de index.html el formulario con action='acceso-login'
