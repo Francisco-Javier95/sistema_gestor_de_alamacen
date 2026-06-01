@@ -1,0 +1,23 @@
+<form method="POST" action="crear-articulo" enctype="multipart/form-data">
+
+    <div>
+        <H2>Crear articulo</H2>
+    </div>
+
+    <div>
+        <label for="">Nombre:</label>
+        <input type="text" name="artNombre" id="artNombre"><br>
+
+        <label for="">Imagen:</label>
+        <input type="file" name="artImagen" id="artImagen"><br>
+
+        <label for="">Precio</label>
+        <input type="number" step="0.01" name="artPrecio" id="artPrecio"><br> <!-- El atributo step="0.01" determina el numero de decimales que maneja el campo -->
+
+        <label for="">Stock:</label>
+        <input type="number" name="artStock" id="artStock"><br>
+
+        <button type="submit">Agregar</button>
+    </div>
+    
+</form>

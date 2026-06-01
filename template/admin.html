@@ -6,6 +6,71 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Bienvenido Admin</h1>
+    <h1>Bienvenido Admin</h1><br>
+
+    
+
+    <a href="/create">Crear articulo</a><br><br>
+
+    {% if mensaje_articulo_agregado_exitosamente %}
+    {{ mensaje_articulo_agregado_exitosamente }}
+    {% endif %}
+    
+    {% if mensaje_articulo_eliminado_exitosamente %}
+    {{ mensaje_articulo_eliminado_exitosamente }}
+    {% endif %}
+
+    {% if mensaje_articulo_modificado_exitosamente %}
+    {{ mensaje_articulo_modificado_exitosamente }}
+    {% endif %}
+
+    <br>
+
+    <br><br>
+    {% if articulos %}
+    <div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; grid-template-rows: auto; background-color: rgb(113, 183, 183);">
+            <div>
+                <p>Id</p>
+            </div>
+            <div>
+                <p>Nombre</p>
+            </div>
+            <div>
+                <p>Foto</p>
+            </div>
+            <div>
+                <p>Precio</p>
+            </div>
+            <div>
+                <p>Stock</p>
+            </div>
+            <div>
+                <p>Acciones</p>
+            </div>
+        </div>
+
+        <!-- Recuparar datos de articulos en la variable mostrar -->
+        {% for mostrar in articulos %} 
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; grid-template-rows: auto;">
+            <div style="width: 16vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_id }}</div>
+            <div style="width: 16vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_articulo }}</div>
+            <div style="width: 16vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_imagen }}</div>
+            <div style="width: 16vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_precio }}</div>
+            <div style="width: 16vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_stock }}</div>
+            <div style="width: 16vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">
+                <a href="/edit/{{ mostrar.articulo_id }}">Editar</a> | 
+                <a href="/destroy/{{ mostrar.articulo_id }}">Eliminar</a>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+    {% else %}
+    <p>No hay datos</p>
+    {% endif %}
+    
+    <br>
+    <a href="/">salir</a>
 </body>
 </html>

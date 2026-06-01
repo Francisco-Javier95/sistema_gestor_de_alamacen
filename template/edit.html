@@ -1,0 +1,29 @@
+{% for articulo_informacion in articulo_id %}
+
+<form method="POST" action="/../editar-articulo" enctype="multipart/form-data">
+<!-- /.. retrocede el acceso en la URL. En otras palabras, sales de una ruta -->
+    <div>
+        <H2>Editar articulo</H2>
+    </div>
+
+    <div>
+        <input type="text" value="{{ articulo_informacion.articulo_id }}" name="artId" id="artId"> <br>
+        <label for="">Nombre:</label>
+        <input type="text" value="{{ articulo_informacion.articulo_articulo }}" name="artNombre" id="artNombre"><br>
+
+        <label for="">Imagen:</label>
+        {{ articulo_informacion.articulo_imagen }}
+        <input type="file" name="artImagen" id="artImagen"><br>
+
+        <label for="">Precio</label>
+        <input type="number" value="{{ articulo_informacion.articulo_precio }}" step="0.01" name="artPrecio" id="artPrecio"><br> <!-- El atributo step="0.01" determina el numero de decimales que maneja el campo -->
+
+        <label for="">Stock:</label>
+        <input type="number" value="{{ articulo_informacion.articulo_stock }}" name="artStock" id="artStock"><br>
+
+        <button type="submit">Editar</button>
+    </div>
+    
+</form>
+
+{% endfor %}
