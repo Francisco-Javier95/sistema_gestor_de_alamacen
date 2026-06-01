@@ -126,13 +126,10 @@ def editar_articulo():
 
         cur.execute("SELECT articulo_imagen FROM articulos WHERE articulo_id = %s", (articulo_id,))
         fila = cur.fetchone()
-
-        str_repr = str(fila)
-        nuevo_texto = str_repr[21:]
-        nuevo_texto2 = nuevo_texto.replace("'}", "") 
+        nombre_imagen = fila['articulo_imagen']
         
 
-        os.remove(os.path.join(app.config['CARPETA'], nuevo_texto2)) # Remueve de la carpeta uploads la vieja imagen
+        os.remove(os.path.join(app.config['CARPETA'], nombre_imagen)) # Remueve de la carpeta uploads la vieja imagen
         cur.execute("UPDATE `articulos` SET `articulo_imagen` = %s WHERE `articulos`.`articulo_id` = %s", (nuevoNombreFoto, articulo_id)) # Modifica de la tabla "articulos" el valor del campo "articulo_imagen" por la nueva imagen, donde el campo "articulo_id" sea igual al id del registro actual
 
         mysql.connection.commit()
