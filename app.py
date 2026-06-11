@@ -1,7 +1,8 @@
 # --------------IMPORTACIÓN DE LAS LIBRERIAS------------------
 from flask import Flask 
-from flask import render_template, redirect, request, Response, session
+from flask import render_template, redirect, request, Response, session, url_for, flash
 from flask_mysqldb import MySQL, MySQLdb
+from flask import send_from_directory
 from datetime import datetime
 import os # Permite entrar en carpetas para poder eliminar un archivo
 
@@ -20,16 +21,28 @@ mysql=MySQL(app)
 CARPETA = os.path.join('uploads') # Crear la referencia a la carpeta de "uploads"
 app.config['CARPETA']=CARPETA # Guardamos la ruta como un dato de la variable CARPETA
 
+@app.route('/uploads/<nombreFoto>')
+def uploads(nombreFoto):
+    return send_from_directory(app.config['CARPETA'], nombreFoto)
+
 @app.route('/')
 def home():
     return render_template('index.html')
 
 @app.route('/admin')
 def admin():
-   return render_template('admin.html')
+    # ------------------- Mostrar los registros------------------
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM articulos")
+    articulos = cur.fetchall() # Selecciona todos los registros
+    cur.close()
 
-# ----------------Función Agregar Articulo---------------------
+    print(articulos) # Imprime en la terminal los registros
+    # ----------------Fin Mostrar los registros------------------
 
+    return render_template('admin.html', articulos=articulos)
+
+# ----------------Función Agregar Articulo-----------------------
 @app.route('/create')
 def create():
     return render_template('create.html')
@@ -40,6 +53,11 @@ def crear_articulo():
     articulo_imagen=request.files['artImagen'] # Las imagenes se recepcionan de diferente forma al ser información binaria (siendo que su sintaxis es _nombre=request.file['nombre'])
     articulo_precio=request.form['artPrecio']
     articulo_stock=request.form['artStock']
+
+    # Mandar mensaje sí algun campo esta vacio
+    if articulo_articulo=='' or articulo_imagen=='' or articulo_precio=='' or articulo_stock=='':
+        flash('Recuerda llenar los datos de todos los campos')
+        return redirect(url_for('create'))
 
     # -----------------Guardar la imagen--------------------------
     now = datetime.now() # Una variable que almancena el tiempo
@@ -65,13 +83,20 @@ def crear_articulo():
     # ----------------Fin Mostrar los registros------------------
     
     return render_template("admin.html",  articulos=articulos, mensaje_articulo_agregado_exitosamente="Articulo agregado exitosamente") # Envia a la pagina admin.html, envia los registros de los articulos y manda el mensaje
-
 # --------------Fin Función Agregar Articulo---------------------
 
 # -----------------Función Borrar Articulo-----------------------
 @app.route('/destroy/<int:id>')
 def destroy(id):
     cur = mysql.connection.cursor()
+
+    # ---------------------Eliminar vieja imagen------------------
+    cur.execute("SELECT articulo_imagen FROM articulos WHERE articulo_id = %s", (id,))
+    vieja_imagen = cur.fetchone()
+    nombre_imagen = vieja_imagen['articulo_imagen'] # Sacar de "{'articulo_imagen': '2026185156nombre.jpg'}"" solo el nombre (2026185156nombre.jpg)
+    os.remove(os.path.join(app.config['CARPETA'], nombre_imagen)) # Remueve de la carpeta uploads la vieja imagen (a partir de su ruta y nombre)
+    # ------------------------------------------------------------
+
     cur.execute("DELETE FROM articulos WHERE `articulos`.`articulo_id` = %s", (id,))
     mysql.connection.commit()
     cur.close()
@@ -87,7 +112,6 @@ def destroy(id):
 
     id_eliminado=str(id) # Convierte un int en str(String)
     return render_template("admin.html",  articulos=articulos, mensaje_articulo_eliminado_exitosamente=("Articulo "+ id_eliminado +" eliminado exitosamente"))
-
 # ---------------Fin Función Borrar Articulo---------------------
 
 # -----------------Función Editar Articulo-----------------------
@@ -124,12 +148,13 @@ def editar_articulo():
         nuevoNombreFoto=tiempo + articulo_imagen.filename # Se concatenara el nombre de la imagen mas el timepo
         articulo_imagen.save("uploads/" + nuevoNombreFoto) # Y la imagen se guardara en la carpeta de uploads
 
+        # ---------------------Eliminar vieja imagen------------------
         cur.execute("SELECT articulo_imagen FROM articulos WHERE articulo_id = %s", (articulo_id,))
-        fila = cur.fetchone()
-        nombre_imagen = fila['articulo_imagen']
-        
+        vieja_imagen = cur.fetchone()
+        nombre_imagen = vieja_imagen['articulo_imagen'] # Sacar de "{'articulo_imagen': '2026185156nombre.jpg'}"" solo el nombre (2026185156nombre.jpg)
+        os.remove(os.path.join(app.config['CARPETA'], nombre_imagen)) # Remueve de la carpeta uploads la vieja imagen (a partir de su ruta y nombre)
+        # ------------------------------------------------------------
 
-        os.remove(os.path.join(app.config['CARPETA'], nombre_imagen)) # Remueve de la carpeta uploads la vieja imagen
         cur.execute("UPDATE `articulos` SET `articulo_imagen` = %s WHERE `articulos`.`articulo_id` = %s", (nuevoNombreFoto, articulo_id)) # Modifica de la tabla "articulos" el valor del campo "articulo_imagen" por la nueva imagen, donde el campo "articulo_id" sea igual al id del registro actual
 
         mysql.connection.commit()
@@ -151,44 +176,54 @@ def editar_articulo():
 
     return render_template("admin.html",  articulos=articulos, mensaje_articulo_modificado_exitosamente=("Articulo "+ id_modificado +" modificado exitosamente"))
 # ---------------------------------------------------------------
-
 # ---------------Fin Función Editar Articulo---------------------
 
 # -----------------------Fución login----------------------------
 @app.route('/acceso-login', methods=["GET", "POST"]) # Extrae de la pagina de index.html el formulario con action='acceso-login'
 def login():
     if request.method == 'POST' and 'usuacorreo' in request.form and 'usuacontra': # Cuando se envien los datos por metodo POST se extraeran los datos de los campos con name="usuacorreo" y name="usuacontra"
-        usuario_usuario = request.form['usuacorreo'] #Se duardan los datos en la variable usuario_usuario
+        usuario_correo = request.form['usuacorreo'] #Se duardan los datos en la variable usuario_usuario
         usuario_contrasenia = request.form['usuacontra'] #Se guardan los datos en la variable usuario_contrasenia
 
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM usuarios WHERE usuario_usuario = %s AND usuario_contrasenia = %s', (usuario_usuario, usuario_contrasenia,)) #Se selecciona todo de la talba usuarios para comparar los datos de la columna usuario_usuario con el dato que alamacenamos del formulario en la variable usuario_usuario. Y los mismo con los datos de la columna usuario_contrasenia con el dato que se almaceno en la variable usuario_contrasenia
-        account = cur.fetchone()
+        cur.execute('SELECT * FROM usuarios WHERE usuario_correo = %s', (usuario_correo,)) #Se selecciona todo de la tlaba usuarios para comparar los datos de la columna usuario_usuario con el dato que alamacenamos del formulario en la variable usuario_usuario.
+        correo_correcto = cur.fetchone()
 
-        if account:
-            session['logueado'] = True
-            session['id'] = account['usuario_id']
-            session['usuario_privilegio'] = account['usuario_privilegio']
+        if correo_correcto:
 
-            if session['usuario_privilegio'] == 1: #Compara el dato del campo de usuario_privilegio del registro para ver si su valor es 1 (1 = Admin)
-                # return render_template("admin.html") #Redirige a la interfaz de Admin
-            
-                # ------------------- Mostrar los registros------------------
-                cur = mysql.connection.cursor()
-                cur.execute("SELECT * FROM articulos")
-                articulos = cur.fetchall() # Selecciona todos los registros
-                cur.close()
+            cur = mysql.connection.cursor()
+            cur.execute('SELECT * FROM usuarios WHERE usuario_contrasenia = %s', (usuario_contrasenia,)) #  Y los mismo con los datos de la columna usuario_contrasenia con el dato que se almaceno en la variable usuario_contrasenia
+            contrasenia_correcta = cur.fetchone()
 
-                print(articulos) # Imprime en la terminal los registros
-                # ----------------Fin Mostrar los registros------------------
+            if contrasenia_correcta:
+                session['logueado'] = True
+                session['id'] = correo_correcto['usuario_id']
+                session['usuario_privilegio'] = correo_correcto['usuario_privilegio']
 
-                return render_template("admin.html", articulos=articulos )
-            else: 
-                if session['usuario_privilegio'] == 2: #Sino compara si el dato es igual a 2 (2 = Usuario)
-                    return render_template("usuario.html") #Redirige a la interfaz de Usuario
+                if session['usuario_privilegio'] == 1: #Compara el dato del campo de usuario_privilegio del registro para ver si su valor es 1 (1 = Admin)
+                    # return render_template("admin.html") #Redirige a la interfaz de Admin
+                
+                    # ------------------- Mostrar los registros------------------
+                    cur = mysql.connection.cursor()
+                    cur.execute("SELECT * FROM articulos")
+                    articulos = cur.fetchall() # Selecciona todos los registros
+                    cur.close()
+
+                    print(articulos) # Imprime en la terminal los registros
+                    # ----------------Fin Mostrar los registros------------------
+
+                    return render_template("admin.html", articulos=articulos )
+                else: 
+                    if session['usuario_privilegio'] == 2: #Sino, compara si el dato es igual a 2 (2 = Supervisor)
+                        return render_template("supervisor.html") #Redirige a la interfaz de Supervisor
+                    else:
+                        if session['usuario_privilegio'] == 3: #Sino, compara si el privilegio es igual a 3 (3 = Cajero)
+                            return render_template("cajero.html")
+            else:
+                return render_template ('index.html', mensaje_error_contrasenia="Contraseña incorrecta")
                 
         else:
-            return render_template('index.html', mensaje_error_credenciales="Usuario incorrecto") 
+            return render_template('index.html', mensaje_error_correo="Correo electronico incorrecto") 
         
     else:
         return render_template('index.html')
@@ -201,11 +236,16 @@ def registro():
 
 @app.route('/crear-registro', methods=["GET", "POST"]) # Extrae de la pagina de registro.html el formulario con action='acceso-registro'
 def crear_registro():
-    usuario_usuario=request.form['usuacorreo'] # Guarda el valor del campo de usuacorreo en la variable usuario_usuario
+    usuario_usuario=request.form['usuanombre'] # Guarda el valor del campo de usuarionombre en la variable usuario_nombre
+    usuario_apellido_paterno=request.form['usuaapellidop'] # Guarda el valor del campo de usuaapellidop en la variable usuario_apellido_paterno
+    usuario_apellido_materno=request.form['usuaapellidom'] # Guarda el valor del campo de usuaapellidom en la variable usuario_apellido_materno
+    usuario_numero_empleado=request.form['usuanumempleado'] # Guarda el valor del campo de usuanumempleado en la variabl usuario_numero_empleado
+    usuario_correo=request.form['usuacorreo'] # Guarda el valor del campo de usuacorreo en la variable usuario_usuario
     usuario_contrasenia=request.form['usuacontra'] # Guarda el valor del campo de usuacontra en la variable usuario_contrasenia
+    usuario_privilegio=request.form['usuapriv'] # Guarda el valor del campo de usuapriv en la variable usuario_privilegio
 
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO usuarios (usuario_usuario, usuario_contrasenia, usuario_privilegio) VALUES (%s, %s, '2')",(usuario_usuario, usuario_contrasenia))
+    cur.execute("INSERT INTO usuarios (usuario_usuario, usuario_aPaterno, usuario_aMaterno, usuario_nuEmpleado, usuario_correo, usuario_contrasenia, usuario_privilegio) VALUES (%s, %s, %s, %s, %s, %s, %s)",(usuario_usuario, usuario_apellido_paterno, usuario_apellido_materno, usuario_numero_empleado, usuario_correo, usuario_contrasenia, usuario_privilegio))
     mysql.connection.commit()
 
     return render_template("index.html", mensaje_registro_exitoso="Usuario registrado exitosamente")

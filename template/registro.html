@@ -7,21 +7,38 @@
     {{ mensaje }}
     {% endif %}
     <div>
-        <label for="">Correo electronico</label>
+        <label for="">Nombre/s:</label>
+        <input type="text" name="usuanombre" placeholder="Francisco Javier">
+    </div>
+    <div>
+        <label for="">Apellido paterno:</label>
+        <input type="text" name="usuaapellidop" placeholder="Sánchez">
+    </div>
+    <div>
+        <label for="">Apellido materno:</label>
+        <input type="text" name="usuaapellidom" placeholder="Islas">
+    </div>
+    <div>
+        <label for="">Número de empleado:</label>
+        <input type="text" name="usuanumempleado" placeholder="">
+    </div>
+    <div>
+        <label for="">Correo electronico:</label>
         <input type="email" name="usuacorreo" placeholder="ejemplo@gmail.com">
         <small>Coloca tu correo electronico que mas uses</small>
     </div>
     <div>
-        <label for="">Contraseña</label>
+        <label for="">Contraseña:</label>
         <input type="password" name="usuacontra" placeholder="Contraseña">
     </div>
-    <!--<div>
+    <div>
         <label for="">Privilegio</label>
         <select name="usuapriv">
+            <option value="3">Cajero</option>
+            <option value="2">Supervisor</option>
             <option value="1">Admin</option>
-            <option value="2">Usuario</option>
         </select>
-    </div>-->
+    </div>
     <!--<div>
         <input type="checkbox" id="checkbox" placeholder="ejemplo@gmail.com">
         <label for="">Marcame</label>

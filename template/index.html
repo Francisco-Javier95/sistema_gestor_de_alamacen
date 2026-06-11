@@ -6,15 +6,21 @@
     <title>Document</title>
 </head>
 <body>
-    <div>{% include('header.html') %}</div>
     <div>
         <form action="acceso-login" method="POST">
             <h1>Iniciar sesión</h1>
 
-            <!--Mensaje de error de usuario-->
-            {% if mensaje_error_credenciales %}
+            <!--Mensaje de error de correo electronico-->
+            {% if mensaje_error_correo %}
             <div>
-                {{ mensaje_error_credenciales }}
+                {{ mensaje_error_correo }}
+            </div>
+            {% endif %}
+
+            <!--Mensaje de error de contraseña-->
+            {% if mensaje_error_contrasenia %}
+            <div>
+                {{ mensaje_error_contrasenia }}
             </div>
             {% endif %}
 
@@ -35,7 +41,10 @@
                 <input type="checkbox" id="checkbox" placeholder="ejemplo@gmail.com">
                 <label for="">Marcame</label>
             </div>-->
-            <button type="submit">Iniciar sesión</button>
+            <div>
+                <button type="submit">Iniciar sesión</button>
+                <a href="/registro">Regitro</a>
+            </div>
         </form>
     </div>
 </body>

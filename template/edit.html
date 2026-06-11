@@ -1,3 +1,5 @@
+<div>{% include('header.html') %}</div>
+
 {% for articulo_informacion in articulo_id %}
 
 <form method="POST" action="/../editar-articulo" enctype="multipart/form-data">
@@ -11,19 +13,25 @@
         <label for="">Nombre:</label>
         <input type="text" value="{{ articulo_informacion.articulo_articulo }}" name="artNombre" id="artNombre"><br>
 
-        <label for="">Imagen:</label>
-        {{ articulo_informacion.articulo_imagen }}
-        <input type="file" name="artImagen" id="artImagen"><br>
+        <label for="">Imagen:</label><br>
+        <img style="max-width: 50vw;" src="{{ url_for('uploads', nombreFoto= articulo_informacion.articulo_imagen ) }}" alt=""><br>
+        <input type="file" name="artImagen" id="artImagen"><br><br>
 
         <label for="">Precio</label>
-        <input type="number" value="{{ articulo_informacion.articulo_precio }}" step="0.01" name="artPrecio" id="artPrecio"><br> <!-- El atributo step="0.01" determina el numero de decimales que maneja el campo -->
+        <input type="number" value="{{ articulo_informacion.articulo_precio }}" step="0.01" name="artPrecio" id="artPrecio" min="0"><br> <!-- El atributo step="0.01" determina el numero de decimales que maneja el campo -->
 
         <label for="">Stock:</label>
-        <input type="number" value="{{ articulo_informacion.articulo_stock }}" name="artStock" id="artStock"><br>
+        <input type="number" value="{{ articulo_informacion.articulo_stock }}" name="artStock" id="artStock" min="0"><br>
 
-        <button type="submit">Editar</button>
+        <div>
+            <button type="submit">Editar</button>
+            <a href="{{url_for('admin')}}">Regresar</a>
+        </div>
+        
     </div>
     
 </form>
 
 {% endfor %}
+
+<div>{% include('footer.html') %}</div>
