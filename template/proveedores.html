@@ -1,0 +1,79 @@
+<div>{% include('header.html') %}</div>
+
+<h2>Proveedores</h2>
+
+<a href="/../create-proveedor">Registrar proveedor</a>
+
+<br>
+<!-- Mensaje de proveedor resgistrado exitosamente -->
+{% if mensaje_proveedor_agregado_exitosamente %}
+    {{ mensaje_proveedor_agregado_exitosamente }}
+{% endif %}
+<!-- Mensaje de proveedor editado exitosamente -->
+{% if mensaje_proveedor_editado_exitosamente %}
+    {{ mensaje_proveedor_editado_exitosamente }}
+{% endif %}
+<!-- Mensaje de proveedor eliminado exitosamente -->
+{% if mensaje_proveedor_eliminado_exitosamente %}
+    {{ mensaje_proveedor_eliminado_exitosamente }}
+{% endif %}
+<br>
+
+<div style="display: flex; flex-direction: row;">
+    <div style="flex-direction: column; min-width: 10%;">
+        {% include('sidebar.html') %}
+    </div>
+
+    <div style="min-width: 90%;">
+        {% if proveedores %}
+            <div style="display: grid; row-gap: 20px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; grid-template-rows: auto; background-color: rgb(182, 135, 53);">
+                    <div>
+                        <p>Id</p>
+                    </div>
+                    <div>
+                        <p>Nombre</p>
+                    </div>
+                    <div>
+                        <p>Apellido <br> Paterno</p>
+                    </div>
+                    <div>
+                        <p>Apellido <br> Materno</p>
+                    </div>
+                    <div>
+                        <p>Teléfono</p>
+                    </div>
+                    <div>
+                        <p>Dirección</p>
+                    </div>
+                    <div>
+                        <p>Correo <br> Electrónico</p>
+                    </div>
+                    <div>
+                        <p>Acciones</p>
+                    </div>
+                </div>
+                {% for mostrar in proveedores %}
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; grid-template-rows: auto;">
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.proveedor_id }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.proveedor_proveedor }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.proveedor_aPaterno }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.proveedor_aMaterno }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.proveedor_telefono }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.proveedor_direccion }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.proveedor_correo }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">
+                            <a href="/edit-proveedor/{{ mostrar.proveedor_id }}">Editar</a> | 
+                            <a href="/destroy-proveedor/{{ mostrar.proveedor_id }}" onclick="return confirm('¿Desea borrar el proveedor?')">Eliminar</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No hay proveedores registrados</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<div>{% include('footer.html') %}</div>

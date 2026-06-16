@@ -7,17 +7,17 @@
     </div>
     {% with messages= get_flashed_messages() %}
 
-    {% if messages %}
-        <div>
-            {% for message in messages %}
-                <div style="display: flex; justify-content: center;">
-                    <div style="background-color: red; border-radius: 15px; border: 20px; border-color: brown; text-align: center; color: aliceblue; padding: 15px;">{{ message }}</div>
-                </div>
-            {% endfor %}
-        </div> <br>
-    {% endif %}
+        {% if messages %}
+            <div>
+                {% for message in messages %}
+                    <div style="display: flex; justify-content: center;">
+                        <div style="background-color: red; border-radius: 15px; border: 20px; border-color: brown; text-align: center; color: aliceblue; padding: 15px;">{{ message }}</div>
+                    </div>
+                {% endfor %}
+            </div> <br>
+        {% endif %}
 
-{% endwith %}
+    {% endwith %}
     <div>
         <label for="">Nombre:</label>
         <input type="text" name="artNombre" id="artNombre"><br>

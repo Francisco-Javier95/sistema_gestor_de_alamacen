@@ -39,9 +39,11 @@
             <option value="1">Admin</option>
         </select>
     </div>
-    <!--<div>
-        <input type="checkbox" id="checkbox" placeholder="ejemplo@gmail.com">
-        <label for="">Marcame</label>
-    </div>-->
-    <button type="submit">Registrarse</button>
+
+    <div>
+        <button type="submit">Registrarse</button>
+        <a href="{{url_for('usuario')}}">Regresar</a>
+    </div>
 </form>
+
+{% include('footer.html') %}

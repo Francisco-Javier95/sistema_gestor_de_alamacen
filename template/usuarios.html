@@ -1,0 +1,83 @@
+<div>{% include('header.html') %}</div>
+
+<h2>Usuarios</h2>
+
+<a href="/registro">Registrar usuario</a><br><br>
+
+<!--Mensaje de usuario registrado exitosamente-->
+{% if mensaje_registro_exitoso %}
+    {{ mensaje_registro_exitoso }}
+{% endif %}
+
+<!--Mensaje de usuario modificado exitosamente-->
+{% if mensaje_usuario_modificado_exitosamente %}
+    {{ mensaje_usuario_modificado_exitosamente }}
+{% endif %}
+
+<!--Mensaje de usuario eliminado exitosamente-->
+{% if mensaje_usuario_eliminado_exitosamente %}
+    {{ mensaje_usuario_eliminado_exitosamente }}
+{% endif %}
+
+<div style="display: flex; flex-direction: row;">
+    <div style="flex-direction: column; min-width: 10%;">
+        {% include('sidebar.html') %}
+    </div>
+
+    <div style="min-width: 90%;">
+        {% if usuarios %}
+            <div style="display: grid; row-gap: 20px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; grid-template-rows: auto; background-color: rgb(83, 188, 108);">
+                    <div>
+                        <p>Id</p>
+                    </div>
+                    <div>
+                        <p>Nombre</p>
+                    </div>
+                    <div>
+                        <p>Apellido <br> Paterno</p>
+                    </div>
+                    <div>
+                        <p>Apellido <br> Materno</p>
+                    </div>
+                    <div>
+                        <p>Número <br> Empleado</p>
+                    </div>
+                    <div>
+                        <p>Correo <br> Electrónico</p>
+                    </div>
+                    <div>
+                        <p>Contraseña</p>
+                    </div>
+                    <div>
+                        <p>Privilegio</p>
+                    </div>
+                    <div>
+                        <p>Acciones</p>
+                    </div>
+                </div>
+                {% for mostrar in usuarios %}
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; grid-template-rows: auto;">
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.usuario_id }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.usuario_usuario }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.usuario_aPaterno }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.usuario_aMaterno }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.usuario_nuEmpleado }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.usuario_correo }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.usuario_contrasenia }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.usuario_privilegio }}</div>
+                        <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">
+                            <a href="/edit-usuario/{{ mostrar.usuario_id }}">Editar</a> | 
+                            <a href="/destroy-usuario/{{ mostrar.usuario_id }}" onclick="return confirm('¿Desea borrar el usuario?')">Eliminar</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No hay usuarios registrados</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<div>{% include('footer.html') %}</div>

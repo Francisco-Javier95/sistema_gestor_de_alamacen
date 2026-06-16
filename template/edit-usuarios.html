@@ -1,0 +1,52 @@
+<div>{% include('header.html') %}</div>
+
+{% for usuario_informacion in usuario_registro %}
+    <!--Formulario de Registro-->
+    <form action="/../editar-usuario" method="POST">
+        <h1>Editar usuario</h1>
+
+        <div>
+            <input type="text" name="usuaId" value="{{ usuario_informacion.usuario_id }}" id="artId"> <br>
+        </div>
+        <div>
+            <label for="">Nombre/s:</label>
+            <input type="text" name="usuanombre" value="{{ usuario_informacion.usuario_usuario }}" placeholder="Francisco Javier">
+        </div>
+        <div>
+            <label for="">Apellido paterno:</label>
+            <input type="text" name="usuaapellidop" value="{{ usuario_informacion.usuario_aPaterno }}" placeholder="Sánchez">
+        </div>
+        <div>
+            <label for="">Apellido materno:</label>
+            <input type="text" name="usuaapellidom" value="{{ usuario_informacion.usuario_aMaterno }}" placeholder="Islas">
+        </div>
+        <div>
+            <label for="">Número de empleado:</label>
+            <input type="text" name="usuanumempleado" value="{{ usuario_informacion.usuario_nuEmpleado }}" placeholder="">
+        </div>
+        <div>
+            <label for="">Correo electronico:</label>
+            <input type="email" name="usuacorreo" value="{{ usuario_informacion.usuario_correo }}" placeholder="ejemplo@gmail.com">
+            <small>Coloca tu correo electronico que mas uses</small>
+        </div>
+        <div>
+            <label for="">Contraseña:</label>
+            <input type="password" name="usuacontra" value="{{ usuario_informacion.usuario_contrasenia }}" placeholder="Contraseña">
+        </div>
+        <div>
+            <label for="">Privilegio</label>
+            <select name="usuapriv">
+                <option value="3">Cajero</option>
+                <option value="2">Supervisor</option>
+                <option value="1">Admin</option>
+            </select>
+        </div>
+        
+        <div>
+            <button type="submit">Editar</button>
+            <a href="{{url_for('usuario')}}">Regresar</a>
+        </div>
+    </form>
+{% endfor %}
+
+<div>{% include('footer.html') %}</div>

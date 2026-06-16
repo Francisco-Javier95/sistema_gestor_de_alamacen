@@ -39,13 +39,12 @@ def admin():
 
     print(articulos) # Imprime en la terminal los registros
     # ----------------Fin Mostrar los registros------------------
-
     return render_template('admin.html', articulos=articulos)
 
 # ----------------Función Agregar Articulo-----------------------
-@app.route('/create')
-def create():
-    return render_template('create.html')
+@app.route('/create-articulo')
+def pagina_create_articulo():
+    return render_template('create-articulos.html')
 
 @app.route('/crear-articulo', methods=["GET", "POST"])
 def crear_articulo():
@@ -57,7 +56,7 @@ def crear_articulo():
     # Mandar mensaje sí algun campo esta vacio
     if articulo_articulo=='' or articulo_imagen=='' or articulo_precio=='' or articulo_stock=='':
         flash('Recuerda llenar los datos de todos los campos')
-        return redirect(url_for('create'))
+        return redirect(url_for('pagina_create_articulo'))
 
     # -----------------Guardar la imagen--------------------------
     now = datetime.now() # Una variable que almancena el tiempo
@@ -86,8 +85,8 @@ def crear_articulo():
 # --------------Fin Función Agregar Articulo---------------------
 
 # -----------------Función Borrar Articulo-----------------------
-@app.route('/destroy/<int:id>')
-def destroy(id):
+@app.route('/destroy-articulo/<int:id>')
+def destroy_articulo(id):
     cur = mysql.connection.cursor()
 
     # ---------------------Eliminar vieja imagen------------------
@@ -115,18 +114,18 @@ def destroy(id):
 # ---------------Fin Función Borrar Articulo---------------------
 
 # -----------------Función Editar Articulo-----------------------
-@app.route('/edit/<int:id>')
-def edit(id):
+@app.route('/edit-articulo/<int:id>')
+def edit_articulo(id):
 
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM articulos WHERE `articulos`.`articulo_id` = %s", (id,))
-    articulo_del_id = cur.fetchall() # Envia la información del registro
+    articulo_id = cur.fetchall() # Envia la información del registro
     mysql.connection.commit()
     cur.close()
 
-    print(articulo_del_id)
+    print(articulo_id)
 
-    return render_template('edit.html', articulo_id=articulo_del_id)
+    return render_template('edit-articulos.html', articulo_id=articulo_id)
 
 # --------------------Guardar los datos--------------------------
 @app.route('/editar-articulo', methods=['POST'])
@@ -177,6 +176,224 @@ def editar_articulo():
     return render_template("admin.html",  articulos=articulos, mensaje_articulo_modificado_exitosamente=("Articulo "+ id_modificado +" modificado exitosamente"))
 # ---------------------------------------------------------------
 # ---------------Fin Función Editar Articulo---------------------
+
+
+@app.route('/admin/usuarios')
+def usuario():
+    # ------------------- Mostrar los registros------------------
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM usuarios")
+    usuarios = cur.fetchall() # Selecciona todos los registros
+    cur.close()
+
+    print(usuarios) # Imprime en la terminal los registros
+    # ----------------Fin Mostrar los registros------------------
+    return render_template("usuarios.html", usuarios=usuarios)
+
+# -------------------Función registro----------------------------
+@app.route('/registro')
+def registro():
+    return render_template('registro.html')
+
+@app.route('/crear-registro', methods=["GET", "POST"]) # Extrae de la pagina de registro.html el formulario con action='acceso-registro'
+def crear_registro():
+    usuario_usuario=request.form['usuanombre'] # Guarda el valor del campo de usuarionombre en la variable usuario_nombre
+    usuario_apellido_paterno=request.form['usuaapellidop'] # Guarda el valor del campo de usuaapellidop en la variable usuario_apellido_paterno
+    usuario_apellido_materno=request.form['usuaapellidom'] # Guarda el valor del campo de usuaapellidom en la variable usuario_apellido_materno
+    usuario_numero_empleado=request.form['usuanumempleado'] # Guarda el valor del campo de usuanumempleado en la variabl usuario_numero_empleado
+    usuario_correo=request.form['usuacorreo'] # Guarda el valor del campo de usuacorreo en la variable usuario_usuario
+    usuario_contrasenia=request.form['usuacontra'] # Guarda el valor del campo de usuacontra en la variable usuario_contrasenia
+    usuario_privilegio=request.form['usuapriv'] # Guarda el valor del campo de usuapriv en la variable usuario_privilegio
+
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO usuarios (usuario_usuario, usuario_aPaterno, usuario_aMaterno, usuario_nuEmpleado, usuario_correo, usuario_contrasenia, usuario_privilegio) VALUES (%s, %s, %s, %s, %s, %s, %s)",(usuario_usuario, usuario_apellido_paterno, usuario_apellido_materno, usuario_numero_empleado, usuario_correo, usuario_contrasenia, usuario_privilegio))
+    mysql.connection.commit()
+
+    # ------------------- Mostrar los registros------------------
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM usuarios")
+    usuarios = cur.fetchall() # Selecciona todos los registros
+    cur.close()
+
+    print(usuarios) # Imprime en la terminal los registros
+    # ----------------Fin Mostrar los registros------------------
+
+    return render_template("usuarios.html", usuarios=usuarios, mensaje_registro_exitoso="Usuario registrado exitosamente")
+
+# -----------------Fin Función registro--------------------------
+
+# ----------------Función Editar Registro------------------------
+@app.route('/edit-usuario/<int:id>')
+def edit_usuario(id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM usuarios WHERE usuario_id = %s", (id,))
+    usuario_del_id = cur.fetchall()
+    mysql.connection.commit()
+    cur.close()
+
+    print(usuario_del_id)
+
+    return render_template('edit-usuarios.html', usuario_registro=usuario_del_id)
+
+# --------------------Guardar los datos--------------------------
+@app.route('/editar-usuario', methods=["POST"])
+def editar_usuario():
+    usuario_id = request.form['usuaId']
+    usuario_nombre= request.form['usuanombre']
+    usuario_apellido_paterno = request.form['usuaapellidop']
+    usuario_apellido_materno = request.form['usuaapellidom']
+    usuario_numero_empleado = request.form['usuanumempleado']
+    usuario_correo_electronico = request.form['usuacorreo']
+    usuario_contrasenia = request.form['usuacontra']
+    usuario_privilegio = request.form['usuapriv']
+
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE usuarios SET usuario_usuario = %s, usuario_aPaterno = %s, usuario_aMaterno = %s, usuario_nuEmpleado = %s, usuario_correo = %s, usuario_contrasenia = %s, usuario_privilegio = %s WHERE usuario_id = %s", (usuario_nombre, usuario_apellido_paterno, usuario_apellido_materno, usuario_numero_empleado, usuario_correo_electronico, usuario_contrasenia, usuario_privilegio, usuario_id))
+    mysql.connection.commit()
+
+    # ------------------- Mostrar los registros------------------
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM usuarios")
+    usuarios = cur.fetchall() # Selecciona todos los registros
+    cur.close()
+
+    print(usuarios) # Imprime en la terminal los registros
+    # ----------------Fin Mostrar los registros------------------
+
+    id_modificado=str(usuario_id) # Convierte un int en str(String)
+
+    return render_template('usuarios.html', usuarios=usuarios, mensaje_usuario_modificado_exitosamente=("Usuario "+ id_modificado +" modificado exitosamente"))
+# ---------------------------------------------------------------
+# --------------Fin Función Editar Registro----------------------
+
+# -----------------Función Borrar Usuario-----------------------
+@app.route('/destroy-usuario/<int:id>')
+def destroy_usuario(id):
+
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM usuarios WHERE `usuarios`.`usuario_id` = %s", (id,))
+    mysql.connection.commit()
+    cur.close()
+
+    # ------------------- Mostrar los registros------------------
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM usuarios")
+    usuarios = cur.fetchall() # Selecciona todos los registros
+    cur.close()
+
+    print(usuarios) # Imprime en la terminal los registros
+    # ----------------Fin Mostrar los registros------------------
+
+    id_eliminado=str(id) # Convierte un int en str(String)
+    return render_template("usuarios.html",  usuarios=usuarios, mensaje_usuario_eliminado_exitosamente=("Usuario "+ id_eliminado +" eliminado exitosamente"))
+# ----------------Fin Función Borrar Usuario---------------------
+
+@app.route('/admin/proveedores')
+def proveedor():
+    #--------------------Mostrar proveedores-------------------------
+    cur=mysql.connection.cursor()
+    cur.execute("SELECT * FROM proveedores")
+    proveedores = cur.fetchall() # Selecciona todos los registros
+    cur.close()
+
+    print(proveedores) # Imprime en la terminal los registros
+    #------------------Fin Mostara proveedores-----------------------
+    return render_template('proveedores.html', proveedores=proveedores)
+
+@app.route('/create-proveedor')
+def pagina_crear_proveedor():
+    return render_template('create-proveedor.html')
+
+# --------------------Función agregar proveedor----------------------
+@app.route('/crear-proveedor', methods=["GET", "POST"])
+def crear_proveedor():
+    proveedor_proveedor = request.form['pronombre']
+    proveedor_apellido_paterno = request.form['proapellidop']
+    proveedor_apellido_materno = request.form['proapellidom']
+    proveedor_telefono = request.form['protelefono']
+    proveedor_direccion = request.form['prodireccion']
+    proveedor_correo = request.form['procorreo']
+
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO proveedores (proveedor_proveedor, proveedor_aPaterno, proveedor_aMaterno, proveedor_telefono, proveedor_direccion, proveedor_correo) VALUES (%s, %s, %s, %s, %s, %s)", (proveedor_proveedor, proveedor_apellido_paterno, proveedor_apellido_materno, proveedor_telefono, proveedor_direccion, proveedor_correo))
+    mysql.connection.commit()
+
+    #--------------------Mostrar proveedores-------------------------
+    cur=mysql.connection.cursor()
+    cur.execute("SELECT * FROM proveedores")
+    proveedores = cur.fetchall() # Selecciona todos los registros
+    cur.close()
+
+    print(proveedores) # Imprime en la terminal los registros
+    #------------------Fin Mostara proveedores-----------------------
+
+    return render_template("proveedores.html", proveedores=proveedores, mensaje_proveedor_agregado_exitosamente="Proveedor agregado exitosamente")
+# ------------------Fin Función agregar proveedor--------------------
+
+# --------------------Función Editar proveedor-----------------------
+@app.route('/edit-proveedor/<int:id>')
+def pagina_editar_proveedor(id):
+    cur= mysql.connection.cursor()
+    cur.execute("SELECT * FROM proveedores WHERE `proveedores`.`proveedor_id` = %s", (id,))
+    proveedor_id = cur.fetchall()
+    mysql.connection.commit()
+    cur.close()
+
+    print(proveedor_id)
+
+    return render_template("edit-proveedor.html", proveedor_id=proveedor_id)
+
+# ------------------------Guardar los datos--------------------------
+@app.route('/editar-proveedor', methods=["GET", "POST"])
+def editar_registro():
+    proveedor_id = request.form['proID']
+    proveedor_proveedor = request.form['pronombre']
+    proveedor_apellido_paternpo = request.form['proapellidop']
+    proveedor_apellido_materno = request.form['proapellidom']
+    proveedor_telefono = request.form['protelefono']
+    proveedor_direccion = request.form['prodireccion']
+    proveedor_correo = request.form['procorreo']
+
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE proveedores SET proveedor_proveedor=%s, proveedor_aPaterno=%s, proveedor_aMaterno=%s, proveedor_telefono=%s, proveedor_direccion=%s, proveedor_correo=%s WHERE proveedor_id=%s", (proveedor_proveedor, proveedor_apellido_paternpo, proveedor_apellido_materno, proveedor_telefono, proveedor_direccion, proveedor_correo, proveedor_id))
+    mysql.connection.commit()
+
+    #--------------------Mostrar proveedores-------------------------
+    cur=mysql.connection.cursor()
+    cur.execute("SELECT * FROM proveedores")
+    proveedores = cur.fetchall() # Selecciona todos los registros
+    cur.close()
+
+    print(proveedores) # Imprime en la terminal los registros
+    #------------------Fin Mostara proveedores-----------------------
+
+    id_modificado=str(proveedor_id)
+
+    return render_template('proveedores.html', proveedores=proveedores, mensaje_proveedor_editado_exitosamente=("Proveedor "+ id_modificado +" modificado exitosamente"))
+# -------------------------------------------------------------------
+# ------------------Fin Función Editar proveedor---------------------
+
+# ---------------------Función borrar proveedor----------------------
+@app.route('/destroy-proveedor/<int:id>')
+def destroy_proveedor(id):
+
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM proveedores WHERE proveedor_id = %s", (id,))
+    mysql.connection.commit()
+
+    #--------------------Mostrar proveedores-------------------------
+    cur=mysql.connection.cursor()
+    cur.execute("SELECT * FROM proveedores")
+    proveedores = cur.fetchall() # Selecciona todos los registros
+    cur.close()
+
+    print(proveedores) # Imprime en la terminal los registros
+    #------------------Fin Mostara proveedores-----------------------
+
+    id_eliminado = str(id) # Convierte un int en str(String)
+
+    return render_template('proveedores.html', proveedores=proveedores, mensaje_proveedor_eliminado_exitosamente=("Proveedor "+ id_eliminado +" eliminado exitosamente"))
+# -------------------Fin Función borrar proveedor--------------------
 
 # -----------------------Fución login----------------------------
 @app.route('/acceso-login', methods=["GET", "POST"]) # Extrae de la pagina de index.html el formulario con action='acceso-login'
@@ -229,28 +446,6 @@ def login():
         return render_template('index.html')
 # ------------------Fin Función login---------------------------
 
-# -------------------Fución registro----------------------------
-@app.route('/registro')
-def registro():
-    return render_template('registro.html')
-
-@app.route('/crear-registro', methods=["GET", "POST"]) # Extrae de la pagina de registro.html el formulario con action='acceso-registro'
-def crear_registro():
-    usuario_usuario=request.form['usuanombre'] # Guarda el valor del campo de usuarionombre en la variable usuario_nombre
-    usuario_apellido_paterno=request.form['usuaapellidop'] # Guarda el valor del campo de usuaapellidop en la variable usuario_apellido_paterno
-    usuario_apellido_materno=request.form['usuaapellidom'] # Guarda el valor del campo de usuaapellidom en la variable usuario_apellido_materno
-    usuario_numero_empleado=request.form['usuanumempleado'] # Guarda el valor del campo de usuanumempleado en la variabl usuario_numero_empleado
-    usuario_correo=request.form['usuacorreo'] # Guarda el valor del campo de usuacorreo en la variable usuario_usuario
-    usuario_contrasenia=request.form['usuacontra'] # Guarda el valor del campo de usuacontra en la variable usuario_contrasenia
-    usuario_privilegio=request.form['usuapriv'] # Guarda el valor del campo de usuapriv en la variable usuario_privilegio
-
-    cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO usuarios (usuario_usuario, usuario_aPaterno, usuario_aMaterno, usuario_nuEmpleado, usuario_correo, usuario_contrasenia, usuario_privilegio) VALUES (%s, %s, %s, %s, %s, %s, %s)",(usuario_usuario, usuario_apellido_paterno, usuario_apellido_materno, usuario_numero_empleado, usuario_correo, usuario_contrasenia, usuario_privilegio))
-    mysql.connection.commit()
-
-    return render_template("index.html", mensaje_registro_exitoso="Usuario registrado exitosamente")
-
-# -----------------Fin Función registro-------------------------
 if __name__ == '__main__':
     app.secret_key="paco_si"
     app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)

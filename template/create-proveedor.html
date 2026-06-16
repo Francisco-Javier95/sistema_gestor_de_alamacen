@@ -1,0 +1,43 @@
+<div>{% include('header.html') %}</div>
+
+<form method="POST" action="crear-proveedor">
+    <div>
+        <h2>Crear proveedor</h2>
+    </div>    
+
+    <div>
+        <div>
+            <label for="">Nombre:</label>
+            <input type="text" name="pronombre" id="pronombre" placeholder="Javier">
+        </div>
+        <div>
+            <label for="">Apellido paterno:</label>
+            <input type="text" name="proapellidop" id="proapellidop" placeholder="Sánchez">
+        </div>
+        <div>
+            <label for="">Apellido materno:</label>
+            <input type="text" name="proapellidom" id="proapellidom" placeholder="Islas">
+        </div>
+        <div>
+            <label for="">Teléfono:</label>
+            <input type="text" name="protelefono" id="protelefono" placeholder="247-###-###">
+        </div>
+        <div>
+            <label for="">Dirección:</label>
+            <input type="text" name="prodireccion" id="prodireccion" placeholder="Calle de los Olivos">
+        </div>
+        <div>
+            <label for="">Correo electrónico</label>
+            <input type="email" name="procorreo" id="procorreo" placeholder="ejemplo@gmail.com">
+        </div>
+    </div>
+    
+    <div>
+        <button type="submit">Registrar</button>
+        <a href="{{url_for('proveedor')}}">Regresar</a>
+    </div>
+
+</form>
+
+
+<div>{% include('footer.html') %}</div>

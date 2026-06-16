@@ -1,10 +1,11 @@
 
 <div>{% include('header.html') %}</div>
-<h1>Bienvenido Admin</h1><br>
+<h1>Bienvenido Admin</h1>
+<h2>Inventario</h2>
 
     
 
-<a href="/create">Crear articulo</a><br><br>
+<a href="/create-articulo">Crear articulo</a><br><br>
 
 {% if mensaje_articulo_agregado_exitosamente %}
     {{ mensaje_articulo_agregado_exitosamente }}
@@ -22,12 +23,12 @@
 
 <br><br>
 
-<div style="display: flex; flex-direction: row;">
-    <div style="flex-direction: column;">
+<div style="min-width: 90vw; display: flex; flex-direction: row;">
+    <div style="min-width: 10%; flex-direction: column;">
         {% include('sidebar.html') %}
     </div>
 
-    <div>
+    <div style="min-width: 90%;">
         <!--<div>
             <input type="search" name="busquedaArticulo" placeholder="Buscar articulo por nombre">
         </div>-->
@@ -57,16 +58,16 @@
             <!-- Recuparar datos de articulos en la variable mostrar -->
             {% for mostrar in articulos %} 
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; grid-template-rows: auto;">
-                    <div style="width: 16vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_id }}</div>
-                    <div style="width: 16vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_articulo }}</div>
-                    <div style="width: 16vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">
+                    <div style="white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_id }}</div>
+                    <div style="white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_articulo }}</div>
+                    <div style="white-space: wrap; overflow: hidden; text-overflow: ellipsis;">
                         <img style="max-width: 180px;" src="/uploads/{{ mostrar.articulo_imagen }}" alt="">
                     </div>
-                    <div style="width: 16vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_precio }}</div>
-                    <div style="width: 16vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_stock }}</div>
-                    <div style="width: 16vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">
-                        <a href="/edit/{{ mostrar.articulo_id }}">Editar</a> | 
-                        <a href="/destroy/{{ mostrar.articulo_id }}" onclick="return confirm('¿Desea borrar el registro?')">Eliminar</a>
+                    <div style="white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_precio }}</div>
+                    <div style="white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.articulo_stock }}</div>
+                    <div style="white-space: wrap; overflow: hidden; text-overflow: ellipsis;">
+                        <a href="/edit-articulo/{{ mostrar.articulo_id }}">Editar</a> | 
+                        <a href="/destroy-articulo/{{ mostrar.articulo_id }}" onclick="return confirm('¿Desea borrar el producto?')">Eliminar</a>
                     </div>
                 </div>
             {% endfor %}
