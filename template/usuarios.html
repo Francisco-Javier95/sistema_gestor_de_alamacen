@@ -67,8 +67,16 @@
                         <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.usuario_contrasenia }}</div>
                         <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">{{ mostrar.usuario_privilegio }}</div>
                         <div style="width: 10vw; white-space: wrap; overflow: hidden; text-overflow: ellipsis;">
-                            <a href="/edit-usuario/{{ mostrar.usuario_id }}">Editar</a> | 
-                            <a href="/destroy-usuario/{{ mostrar.usuario_id }}" onclick="return confirm('¿Desea borrar el usuario?')">Eliminar</a>
+                            {% if mostrar.usuario_id == 1 %}
+                                <div>
+                                    <a href="/edit-usuario/{{ mostrar.usuario_id }}">Editar</a>
+                                </div>
+                            {% else %}
+                                <div>
+                                    <a href="/edit-usuario/{{ mostrar.usuario_id }}">Editar</a> | 
+                                    <a href="/destroy-usuario/{{ mostrar.usuario_id }}" onclick="return confirm('¿Desea borrar el usuario?')">Eliminar</a>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}

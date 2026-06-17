@@ -388,7 +388,7 @@ def destroy_proveedor(id):
     cur.close()
 
     print(proveedores) # Imprime en la terminal los registros
-    #------------------Fin Mostara proveedores-----------------------
+    #------------------Fin Mostrar proveedores-----------------------
 
     id_eliminado = str(id) # Convierte un int en str(String)
 

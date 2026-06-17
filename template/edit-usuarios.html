@@ -34,12 +34,17 @@
             <input type="password" name="usuacontra" value="{{ usuario_informacion.usuario_contrasenia }}" placeholder="Contraseña">
         </div>
         <div>
-            <label for="">Privilegio</label>
-            <select name="usuapriv">
-                <option value="3">Cajero</option>
-                <option value="2">Supervisor</option>
-                <option value="1">Admin</option>
-            </select>
+            {% if usuario_informacion.usuario_id == 1 %}
+                <label for="">Privilegio</label>
+                <p>{{ usuario_informacion.usuario_privilegio }}</p>
+            {% else %}
+                <label for="">Privilegio</label>
+                <select name="usuapriv">
+                    <option value="3">Cajero</option>
+                    <option value="2">Supervisor</option>
+                    <option value="1">Admin</option>
+                </select>
+            {% endif %}
         </div>
         
         <div>
