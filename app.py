@@ -1,4 +1,4 @@
-# --------------IMPORTACIÓN DE LAS LIBRERIAS------------------
+# --------------IMPORTACIÓN DE LAS LIBRERIAS-------------------------
 from flask import Flask 
 from flask import render_template, redirect, request, Response, session, url_for, flash
 from flask_mysqldb import MySQL, MySQLdb
@@ -8,14 +8,14 @@ import os # Permite entrar en carpetas para poder eliminar un archivo
 
 app = Flask(__name__,template_folder='template')
 
-# ---------------CONEXIÓN CON BASE DE DATOS-------------------
+# ---------------CONEXIÓN CON BASE DE DATOS--------------------------
 app.config['MYSQL_HOST']='localhost'
 app.config['MYSQL_USER']='root'
 app.config['MYSQL_PASSWORD']=''
 app.config['MYSQL_DB']='negocio'
 app.config['MYSQL_CURSORCLASS']='DictCursor'
 mysql=MySQL(app)
-# ------------------------------------------------------------
+# -------------------------------------------------------------------
 
 # Crear la referencia de la carpeta "uploads"
 CARPETA = os.path.join('uploads') # Crear la referencia a la carpeta de "uploads"
@@ -31,17 +31,17 @@ def home():
 
 @app.route('/admin')
 def admin():
-    # ------------------- Mostrar los registros------------------
+    # ------------------- Mostrar los registros----------------------
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM articulos")
     articulos = cur.fetchall() # Selecciona todos los registros
     cur.close()
 
     print(articulos) # Imprime en la terminal los registros
-    # ----------------Fin Mostrar los registros------------------
+    # ----------------Fin Mostrar los registros----------------------
     return render_template('admin.html', articulos=articulos)
 
-# ----------------Función Agregar Articulo-----------------------
+# ----------------Función Agregar Articulo---------------------------
 @app.route('/create-articulo')
 def pagina_create_articulo():
     return render_template('create-articulos.html')
@@ -82,9 +82,9 @@ def crear_articulo():
     # ----------------Fin Mostrar los registros------------------
     
     return render_template("admin.html",  articulos=articulos, mensaje_articulo_agregado_exitosamente="Articulo agregado exitosamente") # Envia a la pagina admin.html, envia los registros de los articulos y manda el mensaje
-# --------------Fin Función Agregar Articulo---------------------
+# --------------Fin Función Agregar Articulo-------------------------
 
-# -----------------Función Borrar Articulo-----------------------
+# -----------------Función Borrar Articulo---------------------------
 @app.route('/destroy-articulo/<int:id>')
 def destroy_articulo(id):
     cur = mysql.connection.cursor()
@@ -111,9 +111,9 @@ def destroy_articulo(id):
 
     id_eliminado=str(id) # Convierte un int en str(String)
     return render_template("admin.html",  articulos=articulos, mensaje_articulo_eliminado_exitosamente=("Articulo "+ id_eliminado +" eliminado exitosamente"))
-# ---------------Fin Función Borrar Articulo---------------------
+# ---------------Fin Función Borrar Articulo-------------------------
 
-# -----------------Función Editar Articulo-----------------------
+# -----------------Función Editar Articulo---------------------------
 @app.route('/edit-articulo/<int:id>')
 def edit_articulo(id):
 
@@ -127,7 +127,7 @@ def edit_articulo(id):
 
     return render_template('edit-articulos.html', articulo_id=articulo_id)
 
-# --------------------Guardar los datos--------------------------
+# --------------------Guardar los datos------------------------------
 @app.route('/editar-articulo', methods=['POST'])
 def editar_articulo():
     articulo_id=request.form['artId']
@@ -174,8 +174,8 @@ def editar_articulo():
     id_modificado=str(articulo_id) # Convierte un int en str(String)
 
     return render_template("admin.html",  articulos=articulos, mensaje_articulo_modificado_exitosamente=("Articulo "+ id_modificado +" modificado exitosamente"))
-# ---------------------------------------------------------------
-# ---------------Fin Función Editar Articulo---------------------
+# -------------------------------------------------------------------
+# ---------------Fin Función Editar Articulo-------------------------
 
 
 @app.route('/admin/usuarios')
@@ -190,7 +190,7 @@ def usuario():
     # ----------------Fin Mostrar los registros------------------
     return render_template("usuarios.html", usuarios=usuarios)
 
-# -------------------Función registro----------------------------
+# -------------------Función registro--------------------------------
 @app.route('/registro')
 def registro():
     return render_template('registro.html')
@@ -220,9 +220,9 @@ def crear_registro():
 
     return render_template("usuarios.html", usuarios=usuarios, mensaje_registro_exitoso="Usuario registrado exitosamente")
 
-# -----------------Fin Función registro--------------------------
+# -----------------Fin Función registro------------------------------
 
-# ----------------Función Editar Registro------------------------
+# ----------------Función Editar Registro----------------------------
 @app.route('/edit-usuario/<int:id>')
 def edit_usuario(id):
     cur = mysql.connection.cursor()
@@ -235,7 +235,7 @@ def edit_usuario(id):
 
     return render_template('edit-usuarios.html', usuario_registro=usuario_del_id)
 
-# --------------------Guardar los datos--------------------------
+# --------------------Guardar los datos------------------------------
 @app.route('/editar-usuario', methods=["POST"])
 def editar_usuario():
     usuario_id = request.form['usuaId']
@@ -263,10 +263,10 @@ def editar_usuario():
     id_modificado=str(usuario_id) # Convierte un int en str(String)
 
     return render_template('usuarios.html', usuarios=usuarios, mensaje_usuario_modificado_exitosamente=("Usuario "+ id_modificado +" modificado exitosamente"))
-# ---------------------------------------------------------------
-# --------------Fin Función Editar Registro----------------------
+# -------------------------------------------------------------------
+# --------------Fin Función Editar Registro--------------------------
 
-# -----------------Función Borrar Usuario-----------------------
+# -----------------Función Borrar Usuario----------------------------
 @app.route('/destroy-usuario/<int:id>')
 def destroy_usuario(id):
 
@@ -286,7 +286,7 @@ def destroy_usuario(id):
 
     id_eliminado=str(id) # Convierte un int en str(String)
     return render_template("usuarios.html",  usuarios=usuarios, mensaje_usuario_eliminado_exitosamente=("Usuario "+ id_eliminado +" eliminado exitosamente"))
-# ----------------Fin Función Borrar Usuario---------------------
+# ----------------Fin Función Borrar Usuario-------------------------
 
 @app.route('/admin/proveedores')
 def proveedor():
@@ -395,11 +395,11 @@ def destroy_proveedor(id):
     return render_template('proveedores.html', proveedores=proveedores, mensaje_proveedor_eliminado_exitosamente=("Proveedor "+ id_eliminado +" eliminado exitosamente"))
 # -------------------Fin Función borrar proveedor--------------------
 
-# -----------------------Fución login----------------------------
+# -----------------------Fución login--------------------------------
 @app.route('/acceso-login', methods=["GET", "POST"]) # Extrae de la pagina de index.html el formulario con action='acceso-login'
 def login():
     if request.method == 'POST' and 'usuacorreo' in request.form and 'usuacontra': # Cuando se envien los datos por metodo POST se extraeran los datos de los campos con name="usuacorreo" y name="usuacontra"
-        usuario_correo = request.form['usuacorreo'] #Se duardan los datos en la variable usuario_usuario
+        usuario_correo = request.form['usuacorreo'] #Se guardan los datos en la variable usuario_usuario
         usuario_contrasenia = request.form['usuacontra'] #Se guardan los datos en la variable usuario_contrasenia
 
         cur = mysql.connection.cursor()
@@ -409,7 +409,7 @@ def login():
         if correo_correcto:
 
             cur = mysql.connection.cursor()
-            cur.execute('SELECT * FROM usuarios WHERE usuario_contrasenia = %s', (usuario_contrasenia,)) #  Y los mismo con los datos de la columna usuario_contrasenia con el dato que se almaceno en la variable usuario_contrasenia
+            cur.execute('SELECT * FROM usuarios WHERE usuario_contrasenia = %s AND usuario_correo = %s', (usuario_contrasenia, usuario_correo)) #  Y los mismo con los datos de la columna usuario_contrasenia con el dato que se almaceno en la variable usuario_contrasenia
             contrasenia_correcta = cur.fetchone()
 
             if contrasenia_correcta:
@@ -444,7 +444,40 @@ def login():
         
     else:
         return render_template('index.html')
-# ------------------Fin Función login---------------------------
+# ------------------Fin Función login--------------------------------
+
+# -------------Función restablecer contraseña------------------------
+@app.route('/restore-contraseña')
+def restore_contrasenia():
+    return render_template('restablecer-contraseña.html')
+
+@app.route('/restaurar-contraseña', methods=["GET", "POST"])
+def restaurar_contrasenia():
+    restaurar_correo = request.form['rescorreo']
+    restaurar_numero_empleado = request.form['resnumeroempleado']
+    restaurar_nueva_contrasenia = request.form['rescontrasenia']
+
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM usuarios WHERE usuario_correo = %s", (restaurar_correo,))
+    restaurar_correo_correcto = cur.fetchone()
+
+    if restaurar_correo_correcto:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM usuarios WHERE usuario_nuEmpleado = %s AND usuario_correo = %s", (restaurar_numero_empleado, restaurar_correo,))
+        restaurar_numero_empleado_correcto = cur.fetchone()
+
+        if restaurar_numero_empleado_correcto:
+            cur = mysql.connection.cursor()
+            cur.execute("UPDATE usuarios SET usuario_contrasenia = %s WHERE usuario_correo = %s AND usuario_nuEmpleado = %s", (restaurar_nueva_contrasenia, restaurar_correo, restaurar_numero_empleado))
+            mysql.connection.commit()
+            cur.close()
+
+            return render_template('index.html', mensaje_contrasenia_restablecida_exitosamente="Contraseña restablecida exitosamente")
+        else:
+            return render_template('restablecer-contraseña.html', mensaje_numero_empleado_incorrecto="Número de empleado incorrecto")
+    else:
+        return render_template('restablecer-contraseña.html', mensaje_correo_incorrecto="Correo electrónico incorrecto")
+# -----------Fin Función restablecer contraseña----------------------
 
 if __name__ == '__main__':
     app.secret_key="paco_si"

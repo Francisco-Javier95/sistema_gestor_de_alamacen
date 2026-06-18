@@ -24,6 +24,11 @@
             </div>
             {% endif %}
 
+            <!-- Mensaje de contraseña restablecida exitosamente -->
+            {% if mensaje_contrasenia_restablecida_exitosamente %}
+                {{ mensaje_contrasenia_restablecida_exitosamente }}
+            {% endif %}
+
             <div>
                 <label for="">Correo electronico</label>
                 <input type="email" name="usuacorreo" placeholder="ejemplo@gmail.com">
@@ -33,10 +38,9 @@
                 <label for="">Contraseña</label>
                 <input type="password" name="usuacontra" placeholder="Contraseña">
             </div>
-            <!--<div>
-                <input type="checkbox" id="checkbox" placeholder="ejemplo@gmail.com">
-                <label for="">Marcame</label>
-            </div>-->
+            <div>
+                <a href="{{url_for('restore_contrasenia')}}">Restablecer contraseña</a>
+            </div>
             <div>
                 <button type="submit">Iniciar sesión</button>
             </div>

@@ -1,0 +1,39 @@
+<div>{% include('header.html') %}</div>
+
+<form action="restaurar-contraseña" method="POST">
+    <h1>
+        Restablecer <br>
+        contraseña
+    </h1>
+
+    <!-- Mensaje de correo incorrecto -->
+    {% if mensaje_correo_incorrecto %}
+        {{ mensaje_correo_incorrecto }}
+    {% endif %}
+    <!-- Mensaje de número de empleado incorrecto -->
+    {% if mensaje_numero_empleado_incorrecto %}
+        {{ mensaje_numero_empleado_incorrecto }} 
+    {% endif %}
+
+    <div>
+        <div>
+            <label for="">Correo electrónico:</label>
+            <input type="email" name="rescorreo" id="rescorreo" placeholder="ejemplo@gmail.com">
+        </div>
+        <div>
+            <label for="">Número de empleado:</label>
+            <input type="number" name="resnumeroempleado" id="resnumeroempleado" placeholder="1">
+        </div>
+        <div>
+            <label for="">Nueva contraseña:</label>
+            <input type="password" name="rescontrasenia" id="rescontrasenia" placeholder="*******">
+        </div>
+
+        <div>
+            <button type="submit">Restablecer</button>
+            <a href="/">Iniciar sesión</a>
+        </div>
+    </div>
+</form>
+
+<div>{% include('footer.html') %}</div>
